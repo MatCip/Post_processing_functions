@@ -1,5 +1,5 @@
 # Post_processing_functions
-Useful functions for "Road Segmentation" project
+Useful functions for "Road Segmentation" ML project
 
 
 Post processing functions:
