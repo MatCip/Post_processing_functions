@@ -21,6 +21,7 @@ def img_crop(im, w, h):
 
 def load_image(infilename):
     data = mpimg.imread(infilename)
+    print(infilename);
     return data
 
 def patch_to_img(imdim, w, h, patches):
@@ -107,7 +108,7 @@ def fill_the_gaps_on_patches(im_patches,im_dim,w,h):
         count_white=0;
         count_black=0;
         for i in range(len(means_neighbours)):
-            if(means_neighbours[i]==255):
+            if(means_neighbours[i]==1):
                 count_white=count_white+1;
                 
             if(means_neighbours[i]==0):
@@ -116,28 +117,34 @@ def fill_the_gaps_on_patches(im_patches,im_dim,w,h):
         if(means_list[k]==0):
             if (len(means_neighbours)==8):
                     if (count_white>5):
-                        im_patches[k]=np.ones([16,16,3])*255
+                        im_patches[k]=np.ones([16,16,3])
+                       
                         
             if (len(means_neighbours)==3):     
                     if (count_white>2):
-                        im_patches[k]=np.ones([16,16,3])*255
+                        im_patches[k]=np.ones([16,16,3])
+                        
                         
             if (len(means_neighbours)==5):      
                     if (count_white>4):
-                        im_patches[k]=np.ones([16,16,3])*255
+                        im_patches[k]=np.ones([16,16,3])
                         
-        if(means_list[k]==255):
+                        
+        if(means_list[k]==1):
             if (len(means_neighbours)==8):
                     if (count_black>7):
-                        im_patches[k]=np.zeros([16,16,3])*255
+                        im_patches[k]=np.zeros([16,16,3])
+                       
                        
             if (len(means_neighbours)==3):     
                     if (count_black>2):
-                        im_patches[k]=np.zeros([16,16,3])*255
+                        im_patches[k]=np.zeros([16,16,3])
+                       
                         
             if (len(means_neighbours)==5):      
                     if (count_black>4):
-                        im_patches[k]=np.zeros([16,16,3])*255
+                        im_patches[k]=np.zeros([16,16,3])
+                        
                        
     
     return im_patches
@@ -159,20 +166,21 @@ def fill_the_gaps(folder):
     root_dir = folder
     w=16;
     h=16;
-    image_dir = root_dir + "images/"
+    image_dir = root_dir + "Images/"
     files = os.listdir(image_dir)
     files = list(np.sort(files))
-    n = min(20, len(files)) # Load maximum 20 images
+    n=len(files)
     print("Loading " + str(n) + " images")
     imgs_output = [load_image(image_dir + files[i]) for i in range(n)]
     new_imgs_output=imgs_output;
     im_dim=imgs_output[0].shape;
-
+ 
    
     for i in range(len(imgs_output)):
         new_imgs_output[i]=fill_the_gaps_image(imgs_output[i],w,h,im_dim);
-        img=new_imgs_output[i].astype(np.uint8)
-        Image.fromarray(img).save('prediction_corrected' + '%.3d' % i + '.png')
+        img=new_imgs_output[i];
+        ind=i+1;
+        mpimg.imsave('prediction_corrected' + '%.3d' % ind + '.png',img)
     
    
 
